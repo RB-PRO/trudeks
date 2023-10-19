@@ -50,16 +50,18 @@ func NewXLSX(PathNameFile string) *XLSX {
 func (x *XLSX) WriteXLSX(ID string, Products Сontacts) {
 	// Записать данные
 	x.f.SetCellValue(x.SheetName, fmt.Sprintf("%s%d", "A", x.line), ID)
-	t := reflect.TypeOf(Products.Body.Docs[0])
-	value := reflect.ValueOf(Products.Body.Docs[0])
-	for i := 0; i < value.NumField(); i++ {
-		CollumnName := strings.ReplaceAll(t.Field(i).Tag.Get("json"), ",omitempty", "") // Название колонки
+	if len(Products.Body.Docs) > 0 {
+		t := reflect.TypeOf(Products.Body.Docs[0])
+		value := reflect.ValueOf(Products.Body.Docs[0])
+		for i := 0; i < value.NumField(); i++ {
+			CollumnName := strings.ReplaceAll(t.Field(i).Tag.Get("json"), ",omitempty", "") // Название колонки
 
-		SymbolCol, _ := excelize.ColumnNumberToName(x.colNumber[CollumnName]) // Символ текущей колонки в Excel
-		x.f.SetCellValue(x.SheetName, fmt.Sprintf("%s%d", SymbolCol, x.line), value.Field(i))
+			SymbolCol, _ := excelize.ColumnNumberToName(x.colNumber[CollumnName]) // Символ текущей колонки в Excel
+			x.f.SetCellValue(x.SheetName, fmt.Sprintf("%s%d", SymbolCol, x.line), value.Field(i))
+		}
+		x.f.Save()
+		x.line++ // Иттерирование по строкам
 	}
-	x.f.Save()
-	x.line++ // Иттерирование по строкам
 }
 
 // Закрыть и сохранить файл
