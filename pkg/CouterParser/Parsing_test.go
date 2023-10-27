@@ -22,3 +22,11 @@ func TestPage(t *testing.T) {
 	fmt.Println("Существование следующей страницы:", Next)
 	fmt.Printf("%+v\n", meets[0])
 }
+
+func TestParseCase(t *testing.T) {
+	cs, err := ParseCase(`https://himki--mo.sudrf.ru/modules.php?name=sud_delo&srv_num=1&name_op=case&case_id=652309029&case_uid=059dec2c-6f10-445b-9558-2b8bdada1ba9&delo_id=1540005`)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Printf("%+v\n", cs)
+}
