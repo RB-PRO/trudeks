@@ -27,32 +27,15 @@ func ParsingCounterGoRoutines() (FileName string, Err error) {
 		return "", fmt.Errorf("couter.InputFileXlsxCouter: Lenght of MapCouter = 0")
 	}
 
+	cn := make(chan<- []couter.Meeting)
+	var MEETS []couter.Meeting
 	for Region, mCouter := range MapCouter { // Регионы
 		fmt.Println("Исследуем регион:", Region)
-		for nROI := 0; nROI < len(mCouter); nROI++ { // Суды региона
 
-			fmt.Println("Исследуем суд:", mCouter[nROI].Name, mCouter[nROI].URL)
+		wg.Add(1)
 
-			//  Получаем список всех судебных дел
-			meets, ErrPages := cr.Pages(mCouter[nROI].URL)
-			if ErrPages != nil {
-				return "", fmt.Errorf("couter.Pages: %w for url couter %s", ErrPages, mCouter[nROI].URL)
-			}
-			fmt.Println("Всего судебных дел в суде", mCouter[nROI].Name, ":", len(meets))
+		cr.ParseRegion(Region, mCouter, cn)
 
-			// Подробности по каждому судебному деву
-			for imeet := range meets {
-				fmt.Println(imeet, "/", len(meets))
-				meets[imeet].Link = mCouter[nROI].URL + meets[imeet].Link
-				cs, ErrCase := cr.ParseCase(mCouter[nROI].URL + meets[imeet].Link)
-				if ErrCase != nil {
-					return "", fmt.Errorf("couter.ParseCase: %w for url couter %s", ErrCase, mCouter[nROI].URL+meets[imeet].Link)
-				}
-				meets[imeet].Case = cs
-			}
-		}
-
-		break
 	}
 
 	return "", nil
