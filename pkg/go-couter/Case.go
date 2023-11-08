@@ -6,7 +6,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func ParseCase(link string) (cs Case, Err error) {
+func (cr *Couter) ParseCase(link string) (cs Case, Err error) {
 
 	c := colly.NewCollector()
 

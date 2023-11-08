@@ -9,7 +9,7 @@ import (
 )
 
 // Загрузить данные 2captcha из файла
-func LoadConfig(filename string) (config *ParseStruct, ErrorFIle error) {
+func LoadConfig(filename string) (config *Captcha, ErrorFIle error) {
 	// Открыть файл
 	jsonFile, ErrorFIle := os.Open(filename)
 	if ErrorFIle != nil {

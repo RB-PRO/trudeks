@@ -9,17 +9,17 @@ import (
 )
 
 // Структура для решения капчи
-type ParseStruct struct {
+type Captcha struct {
 	CaptchaClient *api2captcha.Client `json:"-"`
 	Token         string              `json:"ParseStruct"`
 }
 
 // Структура объект для решения капчи
-func NewParseStruct(token string) *ParseStruct {
-	return &ParseStruct{CaptchaClient: api2captcha.NewClient(token)}
+func NewParseStruct(token string) *Captcha {
+	return &Captcha{CaptchaClient: api2captcha.NewClient(token)}
 }
 
-func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
+func (cr *Couter) Pages(CouterURL string) (meets []Meeting, Err error) {
 
 	// От такого числа (От текущей даты отнимаем месяц)
 	DateFrom := time.Now().AddDate(0, -1, 0).Format("02.01.2006")
@@ -52,7 +52,7 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 			Numberic: 1, MinLen: 5, MaxLen: 5, Lang: "en",
 			HintText: "5 digits, lines on top of the picture",
 		}
-		code, err := ps.CaptchaClient.Solve(cap.ToRequest())
+		code, err := cr.Ch.CaptchaClient.Solve(cap.ToRequest())
 		if err != nil {
 			if err == api2captcha.ErrTimeout {
 				log.Println("ps.CaptchaClient.Solve: Timeout")
@@ -73,9 +73,9 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 	for page := 1; NextPageIsExit; page++ {
 
 		// Формируем ссылку на страницу
-		url := fmt.Sprintf(PrefixURL, CouterURL, DateFrom, DateTo, page) + PostFix + CapthaCode
-		fmt.Println(url)
-		fmt.Println()
+		url := fmt.Sprintf(PrefixURL, CouterURL, DateFrom, DateTo, page) + cr.PostFix + CapthaCode
+		// fmt.Println(url)
+		// fmt.Println()
 
 		// Парсим текущую страницу
 		var meetsLocal []Meeting

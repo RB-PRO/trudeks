@@ -9,12 +9,19 @@ import (
 )
 
 func TestPages(t *testing.T) {
+
+	// загрузка данных
+	cr, ErrNewCouter := NewCouter("../../PostFix")
+	if ErrNewCouter != nil {
+		t.Error(ErrNewCouter)
+	}
 	pg, ErrLoadPG := LoadConfig("../../2captcha.json")
 	if ErrLoadPG != nil {
 		t.Error(ErrLoadPG)
 	}
+	cr.Ch = pg
 
-	meets, ErrPage := pg.Pages("https://vbr--spb.sudrf.ru")
+	meets, ErrPage := cr.Pages("https://vbr--spb.sudrf.ru")
 	if ErrPage != nil {
 		t.Error(ErrPage)
 	}
@@ -31,26 +38,24 @@ func TestPage(t *testing.T) {
 	fmt.Printf("%+v\n", meets[0])
 }
 
-func TestParseCase(t *testing.T) {
-	cs, err := ParseCase(`https://himki--mo.sudrf.ru/modules.php?name=sud_delo&srv_num=1&name_op=case&case_id=652309029&case_uid=059dec2c-6f10-445b-9558-2b8bdada1ba9&delo_id=1540005`)
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Printf("%+v\n", cs)
-}
-
 func TestComplexParse(t *testing.T) {
+	// загрузка данных
+	cr, ErrNewCouter := NewCouter("../../PostFix")
+	if ErrNewCouter != nil {
+		t.Error(ErrNewCouter)
+	}
+	pg, ErrLoadPG := LoadConfig("../../2captcha.json")
+	if ErrLoadPG != nil {
+		t.Error(ErrLoadPG)
+	}
+	cr.Ch = pg
+
 	MapCouter, ErrInput := InputFileXlsxCouter("../../суды.xlsx")
 	if ErrInput != nil {
 		t.Error(ErrInput)
 	}
 	if len(MapCouter) == 0 {
 		t.Error("Lenght of MapCouter = 0")
-	}
-
-	pg, ErrLoadPG := LoadConfig("../../2captcha.json")
-	if ErrLoadPG != nil {
-		t.Error(ErrLoadPG)
 	}
 
 	for Region, mCouter := range MapCouter {
@@ -61,7 +66,7 @@ func TestComplexParse(t *testing.T) {
 		fmt.Println("Исследуем регион:", Region)
 		fmt.Println("Исследуем суд:", mCouter[nROI].Name, mCouter[nROI].URL)
 
-		meets, ErrPages := pg.Pages(mCouter[nROI].URL)
+		meets, ErrPages := cr.Pages(mCouter[nROI].URL)
 		if ErrPages != nil {
 			t.Error(ErrPages)
 		}
@@ -69,7 +74,7 @@ func TestComplexParse(t *testing.T) {
 		for imeet := range meets {
 			fmt.Println(imeet, "/", len(meets))
 			meets[imeet].Link = mCouter[nROI].URL + meets[imeet].Link
-			cs, ErrCase := ParseCase(mCouter[nROI].URL + meets[imeet].Link)
+			cs, ErrCase := cr.ParseCase(mCouter[nROI].URL + meets[imeet].Link)
 			if ErrCase != nil {
 				t.Error(ErrCase)
 			}
