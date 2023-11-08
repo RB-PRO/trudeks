@@ -14,7 +14,7 @@ func TestPages(t *testing.T) {
 		t.Error(ErrLoadPG)
 	}
 
-	meets, ErrPage := pg.Pages("https://himki--mo.sudrf.ru")
+	meets, ErrPage := pg.Pages("https://vbr--spb.sudrf.ru")
 	if ErrPage != nil {
 		t.Error(ErrPage)
 	}

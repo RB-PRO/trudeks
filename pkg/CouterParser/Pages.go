@@ -20,11 +20,9 @@ func NewParseStruct(token string) *ParseStruct {
 }
 
 func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
-	// Перменная, которая содержит о существовании следующей страницы
-	var NextPageIsExit bool = true
 
 	// От такого числа (От текущей даты отнимаем месяц)
-	DateFrom := time.Now().AddDate(-1, 0, 0).Format("02.01.2006")
+	DateFrom := time.Now().AddDate(0, -1, 0).Format("02.01.2006")
 	// До такого числа (Текущая дата)
 	DateTo := time.Now().Format("02.01.2006")
 
@@ -32,7 +30,7 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 	// Делаем запрос на определение существования капчи.
 	// В случае существования капчи, в цикле с определённым к-вом иттераций ищем решение
 	CapthaCode := ""
-	for i := 0; ; {
+	for i := 0; CapthaCode == ""; i++ {
 		if i == 5 { // 5 попыток на парсинг
 			return nil, fmt.Errorf("CaptchaParse: Сделано 5 запросов, но ответа не получилось %w", Err)
 		}
@@ -51,10 +49,7 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 		// Стртуктура запросника
 		cap := api2captcha.Normal{
 			Base64:   base64captcha, // base64 картинки
-			Numberic: 1,             // Только цифры
-			MinLen:   5,             // Минимальное к-во символов
-			MaxLen:   5,             // Максимальное к-во символов
-			Lang:     "en",
+			Numberic: 1, MinLen: 5, MaxLen: 5, Lang: "en",
 			HintText: "5 digits, lines on top of the picture",
 		}
 		code, err := ps.CaptchaClient.Solve(cap.ToRequest())
@@ -71,7 +66,10 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 		}
 		CapthaCode = fmt.Sprintf("&captcha=%s&captchaid=%s", code, IDcaptcha)
 	}
+	fmt.Println("CapthaCode", CapthaCode)
 
+	// Перменная, которая содержит о существовании следующей страницы
+	var NextPageIsExit bool = true
 	for page := 1; NextPageIsExit; page++ {
 
 		// Формируем ссылку на страницу
@@ -83,7 +81,7 @@ func (ps *ParseStruct) Pages(CouterURL string) (meets []Meeting, Err error) {
 		var meetsLocal []Meeting
 		meetsLocal, NextPageIsExit, Err = Page(url)
 		if Err != nil {
-			return nil, fmt.Errorf("Pages: %w", Err)
+			return nil, fmt.Errorf("Page: %w", Err)
 		}
 
 		// Сохраняем данные в общем слайсе судебных дел.
