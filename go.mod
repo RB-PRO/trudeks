@@ -3,6 +3,7 @@ module github.com/RB-PRO/trudeks
 go 1.20
 
 require (
+	github.com/2captcha/2captcha-go v1.1.4
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/gocolly/colly v1.2.0
 	github.com/xuri/excelize/v2 v2.8.0
