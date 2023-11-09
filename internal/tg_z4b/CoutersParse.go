@@ -2,6 +2,8 @@ package tgz4b
 
 import (
 	"fmt"
+	"sync"
+	"time"
 
 	couter "github.com/RB-PRO/trudeks/pkg/go-couter"
 )
@@ -27,16 +29,40 @@ func ParsingCounterGoRoutines() (FileName string, Err error) {
 		return "", fmt.Errorf("couter.InputFileXlsxCouter: Lenght of MapCouter = 0")
 	}
 
-	cn := make(chan<- []couter.Meeting)
-	var MEETS []couter.Meeting
-	for Region, mCouter := range MapCouter { // Регионы
-		fmt.Println("Исследуем регион:", Region)
+	var wg sync.WaitGroup             // Объект ожтдания отработки парсеров
+	ch := make(chan []couter.Meeting) // Канал для общения горутин и сохранения результатов
+	var MEETS []couter.Meeting        // Слайс со всеми найденными судебными делами
+	var i int
+	for Region, Couters := range MapCouter { // Цикл по всем регионам Регионы
+		if i == 0 {
+			i++
+			continue
+		}
+		fmt.Println("Исследуем регион", Region)
 
-		wg.Add(1)
+		wg.Add(1) // Добавляем счётчик горутин
 
-		cr.ParseRegion(Region, mCouter, cn)
+		// Запустить горутину парсинга региона
+		go cr.ParseRegion(Region, Couters[:2], ch, &wg)
 
+		i++
+		if i == 2 {
+			break
+		}
 	}
 
-	return "", nil
+	wg.Wait()
+
+	for result := range ch {
+		MEETS = append(MEETS, result...)
+	}
+	fmt.Println("Всего найдено судебных дел:", len(MEETS))
+
+	// Название файла
+	FileName = fmt.Sprintf("%s.xlsx", time.Now().Format("2006-01-02_15-04"))
+
+	// Сохрание данных в файл
+	Err = couter.SaveXlsx(FileName, MEETS)
+
+	return FileName, Err
 }

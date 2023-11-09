@@ -34,7 +34,7 @@ func CaptchaParse(URL string) (base64captcha, IDcaptcha string, Err error) {
 
 	// Поситить сайт
 	URL += "/modules.php?name=sud_delo&srv_num=1&name_op=sf&delo_id=1540005&case_type=0"
-	fmt.Println("URL", URL)
+	// fmt.Println("URL", URL)
 	Err = c.Visit(URL)
 	if Err != nil {
 		return "", "", fmt.Errorf("CaptchaParse: Visit: %w", Err)

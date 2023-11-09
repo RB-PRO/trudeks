@@ -65,8 +65,8 @@ func (cr *Couter) Pages(CouterURL string) (meets []Meeting, Err error) {
 			}
 		}
 		CapthaCode = fmt.Sprintf("&captcha=%s&captchaid=%s", code, IDcaptcha)
+		fmt.Printf("Для суда %s подобрана капча - %s\n", CouterURL, CapthaCode)
 	}
-	fmt.Println("CapthaCode", CapthaCode)
 
 	// Перменная, которая содержит о существовании следующей страницы
 	var NextPageIsExit bool = true

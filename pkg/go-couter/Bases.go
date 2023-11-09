@@ -16,7 +16,7 @@ type Couter struct {
 func NewCouter(FileNamePostFix string) (*Couter, error) {
 
 	// Загружаем данные по Postfix
-	b, ErrReadFile := os.ReadFile("PostFix") // just pass the file name
+	b, ErrReadFile := os.ReadFile(FileNamePostFix) // just pass the file name
 	if ErrReadFile != nil {
 		return nil, ErrReadFile
 	}
