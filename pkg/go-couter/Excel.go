@@ -1,6 +1,8 @@
 package couterparser
 
 import (
+	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -42,6 +44,17 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 		setCell(book, wotkSheet, row, 9, valItem.DoneReport)
 		setCell(book, wotkSheet, row, 10, valItem.DateEffective)
 		setCell(book, wotkSheet, row, 11, valItem.CourtActURL)
+
+		setCell(book, wotkSheet, row, 12, valItem.Case.Idntifier)
+		setCell(book, wotkSheet, row, 13, valItem.Case.IdntifierLink)
+
+		fmt.Printf("A: %+v\n", valItem.Case.Attack)
+		sort.Slice(valItem.Case.Attack, func(i, j int) (less bool) {
+			return valItem.Case.Attack[i].INN != ""
+		})
+		fmt.Printf("A: %+v\n", valItem.Case.Attack)
+		// setCell(book, wotkSheet, row, 14, Attack []Side)
+
 	}
 
 	// Закрыть книгу

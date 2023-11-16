@@ -10,6 +10,7 @@ func (cr *Couter) ParseRegion(Region string, mCouter []CouterNameLink, cn chan [
 
 	var MeetsRegion []Meeting
 	for nROI := range mCouter { // Суды региона
+		fmt.Printf("%+v\n\n\n", mCouter[nROI])
 
 		fmt.Printf("Исследуем суд %s по ссылке %s\n", mCouter[nROI].Name, mCouter[nROI].URL)
 
@@ -23,16 +24,18 @@ func (cr *Couter) ParseRegion(Region string, mCouter []CouterNameLink, cn chan [
 
 		MeetsRegion = append(MeetsRegion, MeetsCouter...)
 	}
-	fmt.Println(123)
 	cn <- MeetsRegion
-	fmt.Println(1234)
 	wg.Done()
-	fmt.Println(12345)
 }
 
 // спарсить все судебные дела по определённому суду
 func (cr *Couter) ParseCouter(url string) ([]Meeting, error) {
 
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("meets[imeet].Link", url)
+	fmt.Println()
+	fmt.Println()
 	//  Получаем список всех судебных дел
 	meets, ErrPages := cr.Pages(url)
 	if ErrPages != nil {
@@ -43,6 +46,11 @@ func (cr *Couter) ParseCouter(url string) ([]Meeting, error) {
 	// Подробности по каждому судебному деву
 	for imeet := range meets {
 		fmt.Println(imeet, "/", len(meets))
+		fmt.Println()
+		fmt.Println()
+		fmt.Println("meets[imeet].Link", url, meets[imeet].Link)
+		fmt.Println()
+		fmt.Println()
 		meets[imeet].Link = url + meets[imeet].Link
 		cs, ErrCase := cr.ParseCase(meets[imeet].Link)
 		if ErrCase != nil {

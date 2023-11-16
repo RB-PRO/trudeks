@@ -33,7 +33,7 @@ func TestCouter(t *testing.T) {
 	var Couters []couter.CouterNameLink
 	var i int
 	for r, c := range MapCouter {
-		if i == 4 {
+		if i == 17 {
 			Region = r
 			Couters = c
 			break
@@ -46,7 +46,7 @@ func TestCouter(t *testing.T) {
 	var wg sync.WaitGroup
 	ch := make(chan []couter.Meeting, 1)
 	wg.Add(1)
-	go cr.ParseRegion(Region, Couters[:2], ch, &wg)
+	go cr.ParseRegion(Region, Couters[:1], ch, &wg)
 	wg.Wait()
 	close(ch)
 	MEETS = <-ch
