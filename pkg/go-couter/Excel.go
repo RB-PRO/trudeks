@@ -1,7 +1,6 @@
 package couterparser
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -30,31 +29,63 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 	setHead(book, wotkSheet, 9, "Решение")                          // DoneReport
 	setHead(book, wotkSheet, 10, "Дата вступления в законную силу") // DateEffective
 	setHead(book, wotkSheet, 11, "Судебные акты(Ссылка)")           // CourtActURL
+	setHead(book, wotkSheet, 12, "Статус")                          // CourtActURL
+	setHead(book, wotkSheet, 13, "Истец")                           // CourtActURL
+	setHead(book, wotkSheet, 14, "Ответчик")                        // CourtActURL
+	setHead(book, wotkSheet, 15, "Ответчик: ИН")                    // CourtActURL
 
-	for indexItem, valItem := range Meetings {
-		row := indexItem + 2
+	var row int = 2
+
+	for _, valItem := range Meetings {
+		// row = indexItem + 2
 		setCell(book, wotkSheet, row, 1, valItem.Number)
 		setCell(book, wotkSheet, row, 2, valItem.Code)
 		setCell(book, wotkSheet, row, 3, valItem.Link)
-		setCell(book, wotkSheet, row, 4, valItem.DateReceipt)
+		setCell(book, wotkSheet, row, 4, valItem.DateReceipt.Format("02.01.2006"))
 		setCell(book, wotkSheet, row, 5, strings.Join(valItem.Category, ";"))
 		setCell(book, wotkSheet, row, 6, valItem.Judge)
-		setCell(book, wotkSheet, row, 7, valItem.DateDone)
+		setCell(book, wotkSheet, row, 7, valItem.DateDone.Format("02.01.2006"))
 		setCell(book, wotkSheet, row, 8, valItem.Appealed)
 		setCell(book, wotkSheet, row, 9, valItem.DoneReport)
-		setCell(book, wotkSheet, row, 10, valItem.DateEffective)
+		setCell(book, wotkSheet, row, 10, valItem.DateEffective.Format("02.01.2006"))
 		setCell(book, wotkSheet, row, 11, valItem.CourtActURL)
+		setCell(book, wotkSheet, row, 12, valItem.Status)
 
-		setCell(book, wotkSheet, row, 12, valItem.Case.Idntifier)
-		setCell(book, wotkSheet, row, 13, valItem.Case.IdntifierLink)
+		// setCell(book, wotkSheet, row, 12, valItem.Case.Idntifier)
+		// setCell(book, wotkSheet, row, 13, valItem.Case.IdntifierLink)
 
-		fmt.Printf("A: %+v\n", valItem.Case.Attack)
+		// fmt.Printf("A: %+v\n", valItem.Case.Attack)
 		sort.Slice(valItem.Case.Attack, func(i, j int) (less bool) {
 			return valItem.Case.Attack[i].INN != ""
 		})
-		fmt.Printf("A: %+v\n", valItem.Case.Attack)
-		// setCell(book, wotkSheet, row, 14, Attack []Side)
+		sort.Slice(valItem.Case.Defense, func(i, j int) (less bool) {
+			return valItem.Case.Defense[i].INN != ""
+		})
+		// fmt.Printf("A: %+v\n", valItem.Case.Attack)
 
+		// Истец
+		var Attack []string
+		for _, att := range valItem.Case.Attack {
+			Attack = append(Attack, att.Name)
+		}
+		setCell(book, wotkSheet, row, 13, strings.Join(Attack, ";"))
+
+		// Ответчик
+		var Defense, DefenseINN []string
+		for _, def := range valItem.Case.Defense {
+			Defense = append(Defense, def.Name)
+			DefenseINN = append(DefenseINN, def.INN)
+		}
+		for i := range Defense {
+			setCell(book, wotkSheet, row, 14, Defense[i])
+			setCell(book, wotkSheet, row, 15, DefenseINN[i])
+			row++
+		}
+
+		// setCell(book, wotkSheet, row, 14, Attack []Side)
+		if len(Defense) == 0 {
+			row++
+		}
 	}
 
 	// Закрыть книгу

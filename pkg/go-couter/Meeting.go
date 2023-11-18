@@ -5,8 +5,9 @@ import "time"
 // Судебное дело
 type Meeting struct {
 	Number        string    // Номер дела
-	Code          string    // Код дела
+	Code          string    // Код дела - Номер дела в суде нижестоящей инстанции
 	Link          string    // Ссылка на дело
+	CouterName    string    // Название суда
 	DateReceipt   time.Time // Дата поступления дела
 	Category      []string  // Категория
 	Judge         string    // Судья
@@ -16,6 +17,9 @@ type Meeting struct {
 	DateEffective time.Time // Дата вступления в законную силу
 	CourtActURL   string    // Судебные акты(Ссылка)
 	Case          Case      // Содержимое по каждому делу
+
+	Status string // Текущее состояние
+	// DateApp time.Time // Дата поступления дела в апелляционную инстанцию
 }
 
 // Информация, которая получается из карточки судебного дела
