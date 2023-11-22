@@ -19,7 +19,7 @@ func Pages(DateFrom, DateTo time.Time, category string) (meets []gocouter.Meetin
 	Next := true
 	for page := 1; Next; page++ {
 		url := fmt.Sprintf(PageLink, DateFromStr, DateToStr, category, page)
-		fmt.Println(url)
+		// fmt.Println(url)
 		var linksMeets []gocouter.Meeting
 		linksMeets, Next, Err = Page(url)
 		if Err != nil {

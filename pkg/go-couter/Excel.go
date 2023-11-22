@@ -41,13 +41,19 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 		setCell(book, wotkSheet, row, 1, valItem.Number)
 		setCell(book, wotkSheet, row, 2, valItem.Code)
 		setCell(book, wotkSheet, row, 3, valItem.Link)
-		setCell(book, wotkSheet, row, 4, valItem.DateReceipt.Format("02.01.2006"))
+		if !valItem.DateReceipt.IsZero() {
+			setCell(book, wotkSheet, row, 4, valItem.DateReceipt.Format("02.01.2006"))
+		}
 		setCell(book, wotkSheet, row, 5, strings.Join(valItem.Category, ";"))
 		setCell(book, wotkSheet, row, 6, valItem.Judge)
-		setCell(book, wotkSheet, row, 7, valItem.DateDone.Format("02.01.2006"))
-		setCell(book, wotkSheet, row, 8, valItem.Appealed)
+		if !valItem.DateDone.IsZero() {
+			setCell(book, wotkSheet, row, 7, valItem.DateDone.Format("02.01.2006"))
+		}
+		// setCell(book, wotkSheet, row, 8, valItem.Appealed)
 		setCell(book, wotkSheet, row, 9, valItem.DoneReport)
-		setCell(book, wotkSheet, row, 10, valItem.DateEffective.Format("02.01.2006"))
+		if !valItem.DateEffective.IsZero() {
+			setCell(book, wotkSheet, row, 10, valItem.DateEffective.Format("02.01.2006"))
+		}
 		setCell(book, wotkSheet, row, 11, valItem.CourtActURL)
 		setCell(book, wotkSheet, row, 12, valItem.Status)
 

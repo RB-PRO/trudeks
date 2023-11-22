@@ -15,8 +15,8 @@ func MSK() {
 	DateFrom := time.Now().AddDate(0, -1, 0)
 	DateTo := time.Now()
 
-	for code := range Codes {
-		fmt.Println(code)
+	for code, CourtName := range Codes {
+		fmt.Println(CourtName)
 		meetPages, ErrPages := mos.Pages(DateFrom, DateTo, code)
 		if ErrPages != nil {
 			panic(ErrPages)
