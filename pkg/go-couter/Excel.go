@@ -31,8 +31,9 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 	setHead(book, wotkSheet, 11, "Судебные акты(Ссылка)")           // CourtActURL
 	setHead(book, wotkSheet, 12, "Статус")                          // CourtActURL
 	setHead(book, wotkSheet, 13, "Истец")                           // CourtActURL
-	setHead(book, wotkSheet, 14, "Ответчик")                        // CourtActURL
-	setHead(book, wotkSheet, 15, "Ответчик: ИН")                    // CourtActURL
+	setHead(book, wotkSheet, 14, "Название лида")                   // Ответчик
+	setHead(book, wotkSheet, 15, "ИНН")                             // CourtActURL
+	setHead(book, wotkSheet, 16, "link")                            // CourtActURL
 
 	var row int = 2
 
@@ -85,6 +86,7 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 		for i := range Defense {
 			setCell(book, wotkSheet, row, 14, Defense[i])
 			setCell(book, wotkSheet, row, 15, DefenseINN[i])
+			setCell(book, wotkSheet, row, 16, "ИНН "+Defense[i])
 			row++
 		}
 
