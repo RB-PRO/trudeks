@@ -104,7 +104,7 @@ func (xx *XLSX) inputRow(RegionName, CouterName string, meet Meeting) error {
 // Название колонок
 func (xx *XLSX) SetHead() error {
 	xx.setHeadCol(1, "Регион")                           //
-	xx.setHeadCol(1, "Название суда")                    //
+	xx.setHeadCol(2, "Название суда")                    //
 	xx.setHeadCol(3, "Номер дела")                       // Number
 	xx.setHeadCol(4, "Код дела")                         // Code
 	xx.setHeadCol(5, "Тип дела")                         // Code

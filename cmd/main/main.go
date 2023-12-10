@@ -1,7 +1,9 @@
 package main
 
 import (
-	parsing "github.com/RB-PRO/trudeks/internal/Parsing"
+	"log"
+
+	app "github.com/RB-PRO/trudeks/internal/tgcouterapp"
 )
 
 func main() {
@@ -9,5 +11,10 @@ func main() {
 	// tgz4b.ParsingCounterGoRoutines()
 	// parsing.MSK()
 	// parsing.MO()
-	parsing.MO2()
+	// parsing.MO2()
+	tgapp, err := app.New()
+	if err != nil {
+		panic(err)
+	}
+	log.Fatal(tgapp.Run())
 }
