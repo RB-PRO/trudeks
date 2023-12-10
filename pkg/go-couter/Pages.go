@@ -31,6 +31,7 @@ func (cr *Couter) Pages(CouterURL string) (meets []Meeting, Err error) {
 	// В случае существования капчи, в цикле с определённым к-вом иттераций ищем решение
 	CapthaCode := ""
 	for i := 0; CapthaCode == ""; i++ {
+		time.Sleep(time.Millisecond * 100)
 		if i == 5 { // 5 попыток на парсинг
 			return nil, fmt.Errorf("CaptchaParse: Сделано 5 запросов, но ответа не получилось %w", Err)
 		}
@@ -71,6 +72,7 @@ func (cr *Couter) Pages(CouterURL string) (meets []Meeting, Err error) {
 	// Перменная, которая содержит о существовании следующей страницы
 	var NextPageIsExit bool = true
 	for page := 1; NextPageIsExit; page++ {
+		time.Sleep(time.Millisecond * 100)
 
 		// Формируем ссылку на страницу
 		url := fmt.Sprintf(PrefixURL, CouterURL, DateFrom, DateTo, page) + cr.PostFix + CapthaCode

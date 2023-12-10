@@ -26,7 +26,7 @@ func Pages(DateFrom, DateTo time.Time, category string) (meets []gocouter.Meetin
 			return nil, Err
 		}
 		meets = append(meets, linksMeets...)
-		time.Sleep(time.Millisecond * 1300)
+		time.Sleep(time.Millisecond * 300)
 	}
 
 	return meets, Err

@@ -10,30 +10,31 @@ import (
 
 // Сохранить данные в Xlsx
 func SaveXlsx(FileName string, Meetings []Meeting) error {
-	// Создать книгу
-	book, makeBookError := MakeWorkBook()
+	book, makeBookError := MakeWorkBook() // Создать книгу
 	if makeBookError != nil {
 		return makeBookError
 	}
-
 	wotkSheet := "main"
-
 	setHead(book, wotkSheet, 1, "Номер дела")                       // Number
 	setHead(book, wotkSheet, 2, "Код дела")                         // Code
-	setHead(book, wotkSheet, 3, "Ссылка на дело")                   // Link
-	setHead(book, wotkSheet, 4, "Дата поступления дела")            // DateReceipt
-	setHead(book, wotkSheet, 5, "Категория")                        // Category
-	setHead(book, wotkSheet, 6, "Судья")                            // Judge
-	setHead(book, wotkSheet, 7, "Дата решения")                     // DateDone
-	setHead(book, wotkSheet, 8, "Обжалуется или нет")               // Appealed
-	setHead(book, wotkSheet, 9, "Решение")                          // DoneReport
-	setHead(book, wotkSheet, 10, "Дата вступления в законную силу") // DateEffective
-	setHead(book, wotkSheet, 11, "Судебные акты(Ссылка)")           // CourtActURL
-	setHead(book, wotkSheet, 12, "Статус")                          // CourtActURL
-	setHead(book, wotkSheet, 13, "Истец")                           // CourtActURL
-	setHead(book, wotkSheet, 14, "Название лида")                   // Ответчик
-	setHead(book, wotkSheet, 15, "ИНН")                             // CourtActURL
-	setHead(book, wotkSheet, 16, "link")                            // CourtActURL
+	setHead(book, wotkSheet, 3, "Тип дела")                         // Code
+	setHead(book, wotkSheet, 4, "Ссылка на дело")                   // Link
+	setHead(book, wotkSheet, 5, "Дата поступления дела")            // DateReceipt
+	setHead(book, wotkSheet, 6, "Категория спора")                  // Category
+	setHead(book, wotkSheet, 7, "Судья")                            // Judge
+	setHead(book, wotkSheet, 8, "Дата решения")                     // DateDone
+	setHead(book, wotkSheet, 9, "Дата судебного события")           //
+	setHead(book, wotkSheet, 10, "Обжалуется или нет")              // Appealed
+	setHead(book, wotkSheet, 11, "Решение")                         // DoneReport
+	setHead(book, wotkSheet, 12, "Дата вступления в законную силу") // DateEffective
+	setHead(book, wotkSheet, 13, "Судебные акты(Ссылка)")           // CourtActURL
+	setHead(book, wotkSheet, 14, "Статус")                          // CourtActURL
+	setHead(book, wotkSheet, 15, "Истец")                           // CourtActURL
+	setHead(book, wotkSheet, 16, "Название компании")               // Ответчик
+	setHead(book, wotkSheet, 17, "ИНН")                             // CourtActURL
+	setHead(book, wotkSheet, 18, "link")                            // CourtActURL
+	setHead(book, wotkSheet, 19, "Источник")
+	setHead(book, wotkSheet, 20, "Ответственный")
 
 	var row int = 2
 
@@ -41,22 +42,26 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 		// row = indexItem + 2
 		setCell(book, wotkSheet, row, 1, valItem.Number)
 		setCell(book, wotkSheet, row, 2, valItem.Code)
-		setCell(book, wotkSheet, row, 3, valItem.Link)
+		setCell(book, wotkSheet, row, 3, valItem.Type)
+		setCell(book, wotkSheet, row, 4, valItem.Link)
 		if !valItem.DateReceipt.IsZero() {
-			setCell(book, wotkSheet, row, 4, valItem.DateReceipt.Format("02.01.2006"))
+			setCell(book, wotkSheet, row, 5, valItem.DateReceipt.Format("02.01.2006"))
 		}
-		setCell(book, wotkSheet, row, 5, strings.Join(valItem.Category, ";"))
-		setCell(book, wotkSheet, row, 6, valItem.Judge)
+		setCell(book, wotkSheet, row, 6, strings.Join(valItem.Category, ";"))
+		setCell(book, wotkSheet, row, 7, valItem.Judge)
 		if !valItem.DateDone.IsZero() {
-			setCell(book, wotkSheet, row, 7, valItem.DateDone.Format("02.01.2006"))
+			setCell(book, wotkSheet, row, 8, valItem.DateDone.Format("02.01.2006"))
+		}
+		if !valItem.DateCouterProcess.IsZero() {
+			setCell(book, wotkSheet, row, 9, valItem.DateCouterProcess.Format("02.01.2006"))
 		}
 		// setCell(book, wotkSheet, row, 8, valItem.Appealed)
-		setCell(book, wotkSheet, row, 9, valItem.DoneReport)
+		setCell(book, wotkSheet, row, 11, valItem.DoneReport)
 		if !valItem.DateEffective.IsZero() {
-			setCell(book, wotkSheet, row, 10, valItem.DateEffective.Format("02.01.2006"))
+			setCell(book, wotkSheet, row, 12, valItem.DateEffective.Format("02.01.2006"))
 		}
-		setCell(book, wotkSheet, row, 11, valItem.CourtActURL)
-		setCell(book, wotkSheet, row, 12, valItem.Status)
+		setCell(book, wotkSheet, row, 13, valItem.CourtActURL)
+		setCell(book, wotkSheet, row, 14, valItem.Status)
 
 		// setCell(book, wotkSheet, row, 12, valItem.Case.Idntifier)
 		// setCell(book, wotkSheet, row, 13, valItem.Case.IdntifierLink)
@@ -75,7 +80,8 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 		for _, att := range valItem.Case.Attack {
 			Attack = append(Attack, att.Name)
 		}
-		setCell(book, wotkSheet, row, 13, strings.Join(Attack, ";"))
+		setCell(book, wotkSheet, row, 15, strings.Join(Attack, ";"))
+		setCell(book, wotkSheet, row, 19, "Мосгорсуд")
 
 		// Ответчик
 		var Defense, DefenseINN []string
@@ -84,9 +90,9 @@ func SaveXlsx(FileName string, Meetings []Meeting) error {
 			DefenseINN = append(DefenseINN, def.INN)
 		}
 		for i := range Defense {
-			setCell(book, wotkSheet, row, 14, Defense[i])
-			setCell(book, wotkSheet, row, 15, DefenseINN[i])
-			setCell(book, wotkSheet, row, 16, "ИНН "+Defense[i])
+			setCell(book, wotkSheet, row, 16, Defense[i])
+			setCell(book, wotkSheet, row, 17, DefenseINN[i])
+			setCell(book, wotkSheet, row, 18, "ИНН "+Defense[i])
 			row++
 		}
 
