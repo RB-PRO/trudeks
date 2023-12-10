@@ -31,6 +31,9 @@ func MO2() {
 
 	BarRegion := pb.StartNew(len(MapCouter))
 	for Region, Couters := range MapCouter {
+		if Region != "Московская область" {
+			continue
+		}
 
 		// BarRegion.Prefix(fmt.Sprintf("%s :[%d/%d]", Region, icateg, len(Categorys)))
 
@@ -47,10 +50,10 @@ func MO2() {
 				// Собираем данные со страницы по определённому суду и дате
 				MeetsCouterDay, ErrCouterDay := region.Page(URL_couter, TecalDay)
 				if ErrCouterDay != nil {
-					panic(fmt.Sprintf("Парсинг страницы суда %s судебных дел за %s: %s - %v",
+					fmt.Println(fmt.Sprintf("Парсинг страницы суда %s судебных дел за %s: %s - %v",
 						URL_couter, TecalDay.Format("02.01.2006"), fmt.Sprintf(region.URLpage, URL_couter, TecalDay.Format("02.01.2006")), ErrCouterDay))
 				}
-				time.Sleep(time.Second)
+				time.Sleep(300 * time.Millisecond)
 
 				ALL += len(MeetsCouterDay)
 
