@@ -15,8 +15,8 @@ func (TG *Telegram) Crones() error {
 
 	// Выступать один раз в день в 18 часов в воскресенье
 	c.AddFunc("0 0 18 * * 0,1,2,3,4", func() {
-		TG.Send(tgbotapi.NewMessage(TG.ChatNotificationID, "Начинаю парсить всю Московскую область"))
-		filename, Err := ParseMO()
+		updmsg, _ := TG.NewUpdMsg("Начинаю парсить всю Московскую область")
+		filename, Err := ParseMO(updmsg)
 		if Err != nil {
 			msg := tgbotapi.NewMessage(TG.ChatNotificationID, "")
 			msg.Text = "Ошибка в парсинге судов московской области: " + Err.Error()
@@ -27,8 +27,8 @@ func (TG *Telegram) Crones() error {
 	})
 
 	c.AddFunc("0 0 0 * * 5", func() {
-		TG.Send(tgbotapi.NewMessage(TG.ChatNotificationID, "Начинаю парсить всю Россию"))
-		filename, Err := ParseRussia()
+		updmsg, _ := TG.NewUpdMsg("Начинаю парсить всю Россию")
+		filename, Err := ParseRussia(updmsg)
 		if Err != nil {
 			msg := tgbotapi.NewMessage(TG.ChatNotificationID, "")
 			msg.Text = "Ошибка в парсинге судов России: " + Err.Error()
@@ -91,10 +91,8 @@ func (TG *Telegram) Watch() error {
 			case "region", "region@RUcouters_bot":
 
 				go func(MessageChatID int64, MessageID int) {
-					msg := tgbotapi.NewMessage(MessageChatID, "ок, начинаю парсить всю Россию")
-					msg.ReplyToMessageID = MessageID
-					TG.Send(msg)
-					filename, Err := ParseRussia()
+					updmsg, _ := TG.NewUpdMsg("ок, начинаю парсить всю Россию")
+					filename, Err := ParseRussia(updmsg)
 					if Err != nil {
 						msg := tgbotapi.NewMessage(MessageChatID, "")
 						msg.Text = "Ошибка в парсинге судов России: " + Err.Error()
@@ -109,10 +107,8 @@ func (TG *Telegram) Watch() error {
 
 			case "mo", "mo@RUcouters_bot":
 				go func(MessageChatID int64, MessageID int) {
-					msg := tgbotapi.NewMessage(MessageChatID, "ок, начинаю парсить всю Московскую область")
-					msg.ReplyToMessageID = MessageID
-					TG.Send(msg)
-					filename, Err := ParseMO()
+					updmsg, _ := TG.NewUpdMsg("ок, начинаю парсить всю Московскую область")
+					filename, Err := ParseMO(updmsg)
 					if Err != nil {
 						msg := tgbotapi.NewMessage(MessageChatID, "")
 						msg.Text = "Ошибка в парсинге судов Московской области: " + Err.Error()

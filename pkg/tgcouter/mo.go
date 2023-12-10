@@ -9,7 +9,7 @@ import (
 )
 
 // Спасить Всё, кроме Московской области
-func ParseRussia() (FileName string, Err error) {
+func ParseRussia(updmsg *UpdateMassage) (FileName string, Err error) {
 
 	MapCouter, ErrInput := gocouter.InputFileXlsxCouter("суды.xlsx")
 	if ErrInput != nil {
@@ -34,7 +34,9 @@ func ParseRussia() (FileName string, Err error) {
 			continue
 		}
 
-		for _, Couter := range Couters {
+		for iCouter, Couter := range Couters {
+			updmsg.Update(fmt.Sprintf("Парсинг РФ\nРегион: %s\nСуд[%d/%d]: %s",
+				Region, iCouter+1, len(Couters), Couter.Name))
 
 			URL_couter := Couter.URL
 			for day := 0; day < ROI_days; day++ {
@@ -51,7 +53,6 @@ func ParseRussia() (FileName string, Err error) {
 				}
 				time.Sleep(300 * time.Millisecond)
 
-				// region.TrudFilter()
 				xx.InputRows(Region, Couter.Name, region.TrudFilter(MeetsCouterDay))
 			}
 		}
@@ -59,12 +60,13 @@ func ParseRussia() (FileName string, Err error) {
 
 	xx.Save()
 	xx.Close()
+	updmsg.Update(("Пропарсил всю Россию"))
 
 	return FileName, nil
 }
 
 // Спасить Всё, кроме Московской области
-func ParseMO() (FileName string, Err error) {
+func ParseMO(updmsg *UpdateMassage) (FileName string, Err error) {
 
 	MapCouter, ErrInput := gocouter.InputFileXlsxCouter("суды.xlsx")
 	if ErrInput != nil {
@@ -86,7 +88,9 @@ func ParseMO() (FileName string, Err error) {
 
 	Region := "Московская область"
 	Couters := MapCouter[Region]
-	for _, Couter := range Couters {
+	for iCouter, Couter := range Couters {
+		updmsg.Update(fmt.Sprintf("Парсинг МО\nРегион: %s\nСуд[%d/%d]: %s",
+			Region, iCouter+1, len(Couters), Couter.Name))
 
 		URL_couter := Couter.URL
 		for day := 0; day < ROI_days; day++ {
@@ -110,6 +114,7 @@ func ParseMO() (FileName string, Err error) {
 
 	xx.Save()
 	xx.Close()
+	updmsg.Update(("Пропарсил всю Московскую область"))
 
 	return FileName, nil
 }

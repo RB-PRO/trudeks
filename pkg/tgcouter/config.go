@@ -7,8 +7,8 @@ import (
 )
 
 type Config struct {
-	Token  string `json:"token"`
-	ChatID int64  `json:"chat_id"`
+	Token  string `json:"Token"`
+	ChatID int64  `json:"ChatId"`
 }
 
 func LoadConfig(FileName string) (cf Config, Err error) {
