@@ -29,17 +29,20 @@ func ParseRussia(updmsg *UpdateMassage) (FileName string, Err error) {
 	}
 	xx.SetHead()
 
+	var iRegion int
 	for Region, Couters := range MapCouter {
 		if Region == "Московская область" {
 			continue
 		}
 
 		for iCouter, Couter := range Couters {
-			updmsg.Update(fmt.Sprintf("Парсинг РФ\nРегион: %s\nСуд[%d/%d]: %s",
-				Region, iCouter+1, len(Couters), Couter.Name))
-
 			URL_couter := Couter.URL
 			for day := 0; day < ROI_days; day++ {
+
+				if day%10 == 0 {
+					updmsg.Update(fmt.Sprintf("Парсинг РФ\n> Регион[%d/%d]: %s\n> Суд[%d/%d]: %s\n> %d-й день из %d",
+						iRegion+1, len(MapCouter), Region, iCouter+1, len(Couters), Couter.Name, day, ROI_days))
+				}
 
 				// Добавляем к дате один день
 				TecalDay := todayDate.AddDate(0, 0, day)
@@ -53,9 +56,31 @@ func ParseRussia(updmsg *UpdateMassage) (FileName string, Err error) {
 				}
 				time.Sleep(300 * time.Millisecond)
 
-				xx.InputRows(Region, Couter.Name, region.TrudFilter(MeetsCouterDay))
+				// Получение данных по сторонам
+				FilterMeets := region.TrudFilter(MeetsCouterDay)
+
+				for iMeet := range FilterMeets {
+					if iMeet%10 == 0 {
+
+						updmsg.Update(fmt.Sprintf("Парсинг РФ\n> Регион[%d/%d]: %s\n> Суд[%d/%d]: %s\n> %d-й день из %d\n> Сбор трудовых дел %d из %d",
+							iRegion+1, len(MapCouter), Region, iCouter+1, len(Couters), Couter.Name, day, ROI_days, iMeet+1, len(FilterMeets)))
+
+					}
+
+					cases, ErrReg := region.ParseCase(FilterMeets[iMeet].Link)
+					if ErrReg != nil {
+						fmt.Printf("Парсинг дела %s: %v\n", FilterMeets[iMeet].Link, ErrReg)
+					}
+					time.Sleep(300 * time.Millisecond)
+					FilterMeets[iMeet].Case = cases
+				}
+
+				// fmt.Println(FilterMeets)
+
+				xx.InputRows(Region, Couter.Name, FilterMeets)
 			}
 		}
+		iRegion++
 	}
 
 	xx.Save()
@@ -107,8 +132,28 @@ func ParseMO(updmsg *UpdateMassage) (FileName string, Err error) {
 			}
 			time.Sleep(300 * time.Millisecond)
 
-			// region.TrudFilter()
-			xx.InputRows(Region, Couter.Name, region.TrudFilter(MeetsCouterDay))
+			// Получение данных по сторонам
+			FilterMeets := region.TrudFilter(MeetsCouterDay)
+
+			for iMeet := range FilterMeets {
+				if iMeet%10 == 0 {
+
+					updmsg.Update(fmt.Sprintf("Парсинг МО\n> Регион: %s\n> Суд[%d/%d]: %s\n> %d-й день из %d\n> Сбор трудовых дел %d из %d",
+						Region, iCouter+1, len(Couters), Couter.Name, day, ROI_days, iMeet+1, len(FilterMeets)))
+
+				}
+
+				cases, ErrReg := region.ParseCase(FilterMeets[iMeet].Link)
+				if ErrReg != nil {
+					fmt.Printf("Парсинг дела %s: %v\n", FilterMeets[iMeet].Link, ErrReg)
+				}
+				time.Sleep(300 * time.Millisecond)
+				FilterMeets[iMeet].Case = cases
+			}
+
+			// fmt.Println(FilterMeets)
+
+			xx.InputRows(Region, Couter.Name, FilterMeets)
 		}
 	}
 

@@ -24,3 +24,11 @@ func TestPage(t *testing.T) {
 
 	gocouter.SaveXlsx("TestPage.xlsx", meets)
 }
+
+func TestParseCase(t *testing.T) {
+	cases, Errcase := ParseCase("https://abinsk--krd.sudrf.ru/modules.php?name=sud_delo&srv_num=1&name_op=case&case_id=306972050&case_uid=9543662b-d2d9-444f-a8a2-d742c1c1c441&result=0&delo_id=1540005&new=")
+	if Errcase != nil {
+		t.Error(Errcase)
+	}
+	fmt.Println(cases)
+}

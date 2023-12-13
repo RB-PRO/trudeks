@@ -79,23 +79,30 @@ func (xx *XLSX) inputRow(RegionName, CouterName string, meet Meeting) error {
 		Attack = append(Attack, att.Name)
 	}
 	xx.setCell(xx.cout, 17, strings.Join(Attack, ";"))
-
-	// Ответчик
-	var Defense, DefenseINN []string
-	for _, def := range meet.Case.Defense {
-		Defense = append(Defense, def.Name)
-		DefenseINN = append(DefenseINN, def.INN)
-	}
-	for i := range Defense {
-		xx.setCell(xx.cout, 18, Defense[i])
-		xx.setCell(xx.cout, 19, DefenseINN[i])
-		xx.setCell(xx.cout, 19, "ИНН "+Defense[i])
-		xx.cout++
-	}
 	xx.setCell(xx.cout, 21, "Мосгорсуд")
 
+	for _, def := range meet.Case.Defense {
+		// xx.setColorCell(xx.cout, 18, "E0EBF5")
+
+		xx.setCell(xx.cout, 18, def.Name)
+		xx.setCell(xx.cout, 19, def.INN)
+		xx.cout++
+	}
+	// // Ответчик
+	// var Defense, DefenseINN []string
+	// for _, def := range meet.Case.Defense {
+	// 	Defense = append(Defense, def.Name)
+	// 	DefenseINN = append(DefenseINN, def.INN)
+	// }
+	// for i := range Defense {
+	// 	xx.setCell(xx.cout, 18, Defense[i])
+	// 	xx.setCell(xx.cout, 19, DefenseINN[i])
+	// 	xx.setCell(xx.cout, 19, "ИНН "+Defense[i])
+	// 	xx.cout++
+	// }
+
 	// setCell(xx.cout, 14, Attack []Side)
-	if len(Defense) == 0 {
+	if len(meet.Case.Defense) == 0 {
 		xx.cout++
 	}
 	return nil
@@ -137,4 +144,22 @@ func (xx *XLSX) setCell(y, x int, value interface{}) error {
 func (xx *XLSX) setHeadCol(x int, value interface{}) error {
 	collumnStr, _ := excelize.ColumnNumberToName(x)
 	return xx.SetCellValue(xx.sheetName, collumnStr+"1", value)
+}
+
+func (xx *XLSX) setColorCell(y, x int, valueRGB string) error {
+
+	style, ErrNewStyle := xx.NewStyle(&excelize.Style{
+		Fill: excelize.Fill{Type: "pattern", Color: []string{valueRGB}, Pattern: 1},
+	})
+	if ErrNewStyle != nil {
+		return fmt.Errorf("ErrNewStyle: %v", ErrNewStyle)
+	}
+
+	collumnStr, ErrColName := excelize.ColumnNumberToName(x)
+	if ErrColName != nil {
+		return fmt.Errorf("ErrColName: %v", ErrColName)
+	}
+	cellsStr := collumnStr + strconv.Itoa(y)
+
+	return xx.SetCellStyle(xx.sheetName, cellsStr, cellsStr, style)
 }

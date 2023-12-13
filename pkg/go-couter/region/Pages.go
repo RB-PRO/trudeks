@@ -20,7 +20,7 @@ const URLpage string = "%s/modules.php?name=sud_delo&srv_num=1&H_date=%s"
 func Page(couterLink string, date time.Time) (meets []gocouter.Meeting, Err error) {
 	var TypeStr string
 	c := colly.NewCollector()
-	c.SetRequestTimeout(50 * time.Second)
+	c.SetRequestTimeout(60 * time.Second)
 	c.UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 YaBrowser/23.3.1.906 (beta) Yowser/2.5 Safari/537.36"
 
 	// Парсинг контента
@@ -101,6 +101,7 @@ func Page(couterLink string, date time.Time) (meets []gocouter.Meeting, Err erro
 
 	// Поситить сайт с целью скрепинга ;)
 	url := fmt.Sprintf(URLpage, couterLink, date.Format("02.01.2006"))
+	fmt.Println(url)
 	Err = c.Visit(url)
 	if Err != nil {
 		return nil, fmt.Errorf("Page: %s Visit: %w", url, Err)
