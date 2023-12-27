@@ -86,6 +86,7 @@ func (xx *XLSX) inputRow(RegionName, CouterName string, meet Meeting) error {
 
 		xx.setCell(xx.cout, 18, def.Name)
 		xx.setCell(xx.cout, 19, def.INN)
+		xx.setCell(xx.cout, 20, "ИНН "+def.Name)
 		xx.cout++
 	}
 	// // Ответчик
