@@ -1,6 +1,7 @@
 package tgz4b
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -10,6 +11,8 @@ import (
 )
 
 func Start() {
+
+	fmt.Println("start")
 
 	TG_config, ErrConfigTg := LoadConfig("telegram.json")
 	if ErrConfigTg != nil {
