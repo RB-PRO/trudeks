@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
 	"github.com/gocolly/colly"
+	gocouter "trudeks/pkg/go-couter"
 )
 
 const PageLink string = "https://mos-gorsud.ru/search?caseDateFrom=%s&caseDateTo=%s&category=%s&processType=2&formType=fullForm&page=%d"

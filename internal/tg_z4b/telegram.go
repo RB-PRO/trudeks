@@ -1,12 +1,14 @@
 package tgz4b
 
 import (
+	"bufio"
 	"log"
+	"os"
 	"strings"
 	"time"
 
-	zachestnyibiznes "github.com/RB-PRO/trudeks/pkg/zachestnyibiznes"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	zachestnyibiznes "trudeks/pkg/zachestnyibiznes"
 )
 
 func Start() {
@@ -79,5 +81,49 @@ func Start() {
 	}
 
 	//
+
+}
+
+func StartLocal() {
+
+	Z4B, ErrConfigZ4B := zachestnyibiznes.LoadConfig("zachestnyibiznes.json")
+	if ErrConfigZ4B != nil {
+		panic(ErrConfigZ4B)
+	}
+
+	// open file
+	f, err := os.Open("inn.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// remember to close the file at the end of the program
+	defer f.Close()
+
+	// read the file line by line using scanner
+	scanner := bufio.NewScanner(f)
+
+	var IDS []string
+	for scanner.Scan() {
+		if scanner.Text() != "" {
+			IDS = append(IDS, scanner.Text())
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	filename := "z4b от " + time.Now().Format("15h04m 01-02-2006") + ".xlsx"
+
+	xlsx := zachestnyibiznes.NewXLSX(filename)
+	for _, ID := range IDS {
+		contacts, ErrCont := Z4B.Contacts(ID)
+		if ErrCont != nil {
+			log.Fatal(err)
+		}
+		xlsx.WriteXLSX(ID, contacts)
+		time.Sleep(time.Millisecond * 300)
+	}
+	xlsx.CloceAndSaveXLSX()
 
 }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
 	"github.com/gocolly/colly"
+	gocouter "trudeks/pkg/go-couter"
 )
 
 func ParseCase(link string) (cs gocouter.Case, Err error) {

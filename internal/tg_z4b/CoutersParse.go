@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	couter "github.com/RB-PRO/trudeks/pkg/go-couter"
+	couter "trudeks/pkg/go-couter"
 )
 
 // Спарсить суды по списку

@@ -1,4 +1,4 @@
-module github.com/RB-PRO/trudeks
+module trudeks
 
 go 1.20
 

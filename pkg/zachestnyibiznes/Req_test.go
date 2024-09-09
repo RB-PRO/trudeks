@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	zachestnyibiznes "github.com/RB-PRO/trudeks/pkg/zachestnyibiznes"
+	zachestnyibiznes "trudeks/pkg/zachestnyibiznes"
 )
 
 func TestContacts(t *testing.T) {
-	z4b, ErrLoad := zachestnyibiznes.LoadConfig("zachestnyibiznes.json")
+	z4b, ErrLoad := zachestnyibiznes.LoadConfig("../../zachestnyibiznes.json")
 	if ErrLoad != nil {
 		t.Error(ErrLoad)
 	}

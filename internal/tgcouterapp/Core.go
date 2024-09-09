@@ -6,7 +6,7 @@ package tgcouterapp
 import (
 	"fmt"
 
-	tgcouter "github.com/RB-PRO/trudeks/pkg/tgcouter"
+	tgcouter "trudeks/pkg/tgcouter"
 )
 
 // Структура для работы приложения для защиты файла

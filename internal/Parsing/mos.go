@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
-	"github.com/RB-PRO/trudeks/pkg/go-couter/mos"
+	gocouter "trudeks/pkg/go-couter"
+	"trudeks/pkg/go-couter/mos"
 )
 
 func MSK() {

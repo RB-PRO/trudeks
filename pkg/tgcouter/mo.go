@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
-	region "github.com/RB-PRO/trudeks/pkg/go-couter/region"
+	gocouter "trudeks/pkg/go-couter"
+	region "trudeks/pkg/go-couter/region"
 )
 
 // Спасить Всё, кроме Московской области

@@ -3,7 +3,7 @@ package region
 import (
 	"strings"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
+	gocouter "trudeks/pkg/go-couter"
 )
 
 func TrudFilter(meets []gocouter.Meeting) []gocouter.Meeting {

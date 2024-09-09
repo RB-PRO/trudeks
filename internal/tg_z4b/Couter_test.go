@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	couter "github.com/RB-PRO/trudeks/pkg/go-couter"
+	couter "trudeks/pkg/go-couter"
 )
 
 func TestCouter(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
+	gocouter "trudeks/pkg/go-couter"
 )
 
 func TestPage(t *testing.T) {

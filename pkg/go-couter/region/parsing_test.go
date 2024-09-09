@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	gocouter "github.com/RB-PRO/trudeks/pkg/go-couter"
+	gocouter "trudeks/pkg/go-couter"
 )
 
 // https://himki--mo.sudrf.ru/modules.php?name=sud_delo&srv_num=1&H_date=11.12.2023
